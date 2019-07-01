@@ -4,14 +4,15 @@ from tabula import convert_into
 from .utils import Pdf
 
 
-def parse_statement_pdf(path):
+def parse_statement_pdf(creditor, path):
     result = []
     temp_file_path = "test.csv"
     unsanitized = []
-    pdf = Pdf(path)
+    pdf = Pdf(path, creditor)
     pgs = pdf.get_page_range()
+    relative_area = pdf.get_relative_area_percentages()
     convert_into(path, temp_file_path, output_format="csv", pages=pgs,
-                 guess=False, area=[10, 0, 97, 100], relative_area=True)
+                 guess=False, area=relative_area, relative_area=True)
     with open(temp_file_path, 'r') as f:
         reader = csv.reader(f)
         unsanitized = list(reader)
